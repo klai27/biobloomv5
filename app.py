@@ -43,18 +43,18 @@ model = load_model(model_path)
 st.success("Model loaded successfully and ready to predict.")
 st.write("Model output shape:", model.output_shape)
 
-# Class labels from training
+# Friendly class labels
 class_labels = [
-    "Tomato_mosaic_virus",
-    "Target_Spot",
-    "Bacterial_spot",
-    "Tomato_Yellow_Leaf_Curl_Virus",
-    "Late_blight",
-    "Leaf_Mold",
-    "Early_blight",
-    "Spider_mites Two-spotted_spider_mite",
-    "Tomato___healthy",
-    "Septoria_leaf_spot"
+    "Bacterial Spot",
+    "Early Blight",
+    "Late Blight",
+    "Leaf Mold",
+    "Septoria Leaf Spot",
+    "Spider Mites",
+    "Target Spot",
+    "Tomato Yellow Leaf Curl Virus",
+    "Tomato Mosaic Virus",
+    "Healthy"
 ]
 
 # Upload and predict
@@ -69,7 +69,9 @@ if uploaded_file is not None:
     img_array = np.array(image) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
-    prediction = model.predict(img_array)
-    predicted_class = class_labels[np.argmax(prediction)]
+    prediction = model.predict(img_array)[0]
+    predicted_index = np.argmax(prediction)
+    predicted_class = class_labels[predicted_index]
+    confidence = prediction[predicted_index] * 100
 
-    st.success(f"Prediction: **{predicted_class}**")
+    st.success(f"Prediction: **{predicted_class}** ({confidence:.2f}% confident)")
